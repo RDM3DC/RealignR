@@ -1,0 +1,35 @@
+[
+  {
+    "step": 0,
+    "dataset": "wikitext",
+    "config": "wikitext-103-raw-v1",
+    "split": "train[:2%]",
+    "description": "Initial training on standard text corpus"
+  },
+  {
+    "step": 50000,
+    "dataset": "roneneldan/TinyStories",
+    "split": "train[:3%]",
+    "description": "Transitioning to simple narrative domain"
+  },
+  {
+    "step": 100000,
+    "dataset": "wikitext",
+    "config": "wikitext-103-raw-v1",
+    "split": "train[2%:4%]",
+    "description": "Return to formal text with memory retention"
+  },
+  {
+    "step": 150000,
+    "dataset": "roneneldan/TinyStories",
+    "split": "train[3%:6%]",
+    "description": "Back to narrative domain with enhanced memory"
+  },
+  {
+    "step": 200000,
+    "dataset": "wikitext",
+    "config": "wikitext-103-raw-v1", 
+    "split": "train[4%:8%]",
+    "description": "Final formal domain with accumulated knowledge"
+  }
+]
