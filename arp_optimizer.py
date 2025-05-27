@@ -1,8 +1,8 @@
 import torch
 
-class ARP_Optimiser(torch.optim.Optimizer):
+class ARPOptimizer(torch.optim.Optimizer):
     r"""
-    ARP_Optimiser implements a simple version of the conduction-like update:
+    ARPOptimizer implements a simple version of the conduction-like update:
         G_{t+1} = (1 - mu) * G_t + alpha * |grad|
         p_{t+1} = p_t - lr * G_{t+1} * sign(grad)
 
@@ -19,7 +19,7 @@ class ARP_Optimiser(torch.optim.Optimizer):
         weight_decay (float): optional weight decay for parameters (default: 0)
 
     Example:
-        optimizer = ARP_Optimiser(model.parameters(), lr=1e-3, alpha=1e-2, mu=1e-3)
+        optimizer = ARPOptimizer(model.parameters(), lr=1e-3, alpha=1e-2, mu=1e-3)
     """
 
     def __init__(self, params,
@@ -50,9 +50,7 @@ class ARP_Optimiser(torch.optim.Optimizer):
             mu = group['mu']
             weight_decay = group['weight_decay']
             clamp_min = group['clamp_G_min']
-            clamp_max = group['clamp_G_max']
-            
-            # --- Warm-start G from initial gradient ---
+            clamp_max = group['clamp_G_max']            # --- Warm-start G from initial gradient ---
             if 'warm_started' not in self.state:
                 for p in group['params']:
                     if p.grad is not None:
@@ -72,7 +70,7 @@ class ARP_Optimiser(torch.optim.Optimizer):
 
                 grad = p.grad.data
                 if grad.is_sparse:
-                    raise RuntimeError("ARP_Optimiser does not support sparse gradients")
+                    raise RuntimeError("ARPOptimizer does not support sparse gradients")
 
                 if weight_decay != 0:
                     p.data.add_(-weight_decay * p.data)
@@ -90,6 +88,3 @@ class ARP_Optimiser(torch.optim.Optimizer):
                 p.data.add_(G * grad.sign(), alpha=-lr)
 
         return loss
-
-# Alias for backward compatibility
-ARPOptimizer = ARP_Optimiser
